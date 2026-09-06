@@ -1,0 +1,110 @@
+:root { --danger: 0; --background-danger: 0; --wash-danger: 0; --vignette-danger: 0; --vignette-size: 35px; --grain-danger: .025; }
+* { box-sizing: border-box; }
+html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; background: #f5e8f1; font-family: Arial, Helvetica, sans-serif; }
+.backgrounds, .background, .heart-layer, .heart-pile, .heart-field, .engulf-cover, .red-wash, .vignette, .global-grain, .scene-transition, .heart-ocean-dom, .final-heart-art { position: fixed; inset: 0; }
+.backgrounds { z-index: 0; overflow: hidden; }
+.background { width: 100%; height: 100%; object-fit: cover; transform: scale(1.01); transition: opacity 900ms ease-in-out; }
+.background-one { opacity: 1; }
+.background-two { opacity: 0; }
+body[data-state='hands_warning'] .background-one,
+body[data-state='heart_game'] .background-one,
+body[data-state='overload'] .background-one,
+body[data-state='engulfed'] .background-one,
+body[data-state='reveal'] .background-one { opacity: 0; }
+body[data-state='ocean_transition'] .background-one,
+body[data-state='heart_ocean'] .background-one { opacity: 0; }
+body[data-state='hands_warning'] .background-two,
+body[data-state='heart_game'] .background-two,
+body[data-state='overload'] .background-two,
+body[data-state='engulfed'] .background-two,
+body[data-state='reveal'] .background-two { opacity: 1; }
+body[data-state='ocean_transition'] .background-two,
+body[data-state='heart_ocean'] .background-two { opacity: 0; }
+body > canvas { position: fixed; inset: 0; z-index: 3; display: block; pointer-events: none; }
+body > canvas.shovel-canvas { z-index: 7; }
+.mouse-guide { position: fixed; left: 50%; top: 48%; z-index: 20; display: grid; width: 50vw; transform: translate(-50%,-50%); opacity: 0; visibility: hidden; pointer-events: none; transition: opacity 280ms ease; }
+.intro-ready .mouse-guide { opacity: 1; visibility: visible; pointer-events: auto; }
+.control-enabled .mouse-guide { opacity: 0; visibility: hidden; pointer-events: none; }
+.mouse-guide img { display: block; width: 100%; height: auto; }
+.mouse-guide-button { appearance: none; width: 100%; margin: -2% 0 0; padding: 0; border: 0; background: transparent; cursor: pointer; animation: guide-breathe 1.15s ease-in-out infinite; transform-origin: 50% 50%; }
+@keyframes guide-breathe { 0%,100% { transform: scale(1.06); } 50% { transform: scale(.94); } }
+.warning-pop { position: fixed; left: 50%; top: 48%; z-index: 18; width: 50vw; height: auto; transform: translate(-50%,-50%) scale(.9); opacity: 0; visibility: hidden; pointer-events: none; }
+body[data-state='shock'] .warning-pop { visibility: visible; animation: pop-warning 3s ease both; }
+@keyframes pop-warning { 0% { opacity: 0; transform: translate(-50%,-50%) scale(.82); } 12%,82% { opacity: 1; transform: translate(-50%,-50%) scale(1); } 100% { opacity: 0; transform: translate(-50%,-50%) scale(1.03); } }
+.dig-guide { position: fixed; inset: 0; z-index: 18; opacity: 0; visibility: hidden; pointer-events: none; transition: opacity 300ms ease; }
+body:is([data-state='heart_ocean'],[data-state='digging']) .dig-guide { opacity: 1; visibility: visible; }
+.help-pop { position: absolute; left: 50%; top: 23%; width: 50vw; transform: translate(-50%,-50%); }
+.figure-pointer { position: absolute; right: clamp(20vw,23vw,370px); bottom: clamp(25vh,32vh,360px); width: clamp(140px,18vw,280px); opacity: 0; transform: rotate(-30deg) scaleX(-1); transform-origin: 50% 70%; transition: opacity 240ms ease; animation: figure-breathe 1.2s ease-in-out infinite; }
+body[data-state='digging'] .figure-pointer { opacity: 1; }
+@keyframes figure-breathe { 0%,100% { transform: rotate(-30deg) scaleX(-1) scale(1.06); } 50% { transform: rotate(-30deg) scaleX(-1) scale(.94); } }
+body[data-state='shock'] .background-one { opacity: 0; }
+body[data-state='shock'] .background-two { opacity: 1; }
+body:is([data-state='digging'],[data-state='reveal']) :is(.background-one,.background-two) { opacity: 0; }
+.heart-layer canvas, .heart-pile canvas, .heart-field canvas, .engulf-cover canvas, .heart-ocean-dom canvas { width: 100%; height: 100%; display: block; pointer-events: none; }
+.warning-hands { position: fixed; inset: 0; z-index: 2; pointer-events: none; }
+.warning-hand { position: absolute; bottom: 0; width: min(51vw, 720px); height: 114vh; opacity: 0; will-change: transform, opacity; }
+.warning-hand > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; object-position: center bottom; }
+.warning-hand-main { z-index: 1; filter: none; }
+.warning-hand-glow { z-index: 0; opacity: .72; filter: blur(10px); mask-image: linear-gradient(to bottom, transparent 0%, transparent 42%, rgba(0,0,0,.28) 58%, #000 82%); -webkit-mask-image: linear-gradient(to bottom, transparent 0%, transparent 42%, rgba(0,0,0,.28) 58%, #000 82%); mask-repeat: no-repeat; -webkit-mask-repeat: no-repeat; }
+.warning-hand-left { left: 0; transform: translate3d(-6%,125%,0) rotate(-4deg); }
+.warning-hand-right { right: 0; transform: translate3d(6%,125%,0) rotate(4deg); }
+body:is([data-state='hands_warning'],[data-state='shock']) .warning-hand { opacity: 1; transition: transform 520ms cubic-bezier(.16,1,.3,1), opacity 180ms ease-out; }
+body:is([data-state='hands_warning'],[data-state='shock']) .warning-hand-left { transform: translate3d(-6%,20%,0) rotate(-1deg); }
+body:is([data-state='hands_warning'],[data-state='shock']) .warning-hand-right { transform: translate3d(6%,20%,0) rotate(1deg); }
+body:not([data-state='hands_warning']):not([data-state='shock']) .warning-hand { transition: transform 240ms ease-in, opacity 180ms ease-in; }
+.heart-layer, .heart-pile, .heart-field, .engulf-cover { pointer-events: none; overflow: hidden; }
+.heart-layer-back { z-index: 1; } .heart-layer-mid { z-index: 4; } .heart-pile { z-index: 5; } .heart-layer-front { z-index: 8; }
+.heart-field { z-index: 2; opacity: 0; height: 68vh; top: auto; bottom: -9vh; transform-origin: 50% 100%; transform: perspective(700px) rotateX(61deg) scale(1.7); transition: opacity 900ms ease 180ms, transform 1500ms cubic-bezier(.16,1,.3,1); }
+.engulf-cover { z-index: 9; opacity: 0; background: rgba(178,0,37,.18); transform: scale(1.08); transition: opacity 220ms ease, transform 1250ms cubic-bezier(.2,.75,.2,1); }
+body[data-state='engulfed'] .engulf-cover { opacity: 1; transform: scale(1); }
+body[data-state='reveal'] .engulf-cover { opacity: 0; transform: scale(.42) translateY(78vh); }
+body[data-state='reveal'] .heart-field { opacity: 1; transform: perspective(700px) rotateX(57deg) scale(1.18); }
+body[data-state='reveal'] .heart-pile { transform: translateY(43vh) scale(.84); transform-origin: 50% 100%; transition: transform 1450ms cubic-bezier(.16,1,.3,1); }
+body[data-state='reveal'] .heart-layer { opacity: 0; transition: opacity 650ms ease; }
+.warning { position: fixed; inset: 0; z-index: 12; display: grid; place-content: center; gap: 8px; color: #a30024; text-align: center; letter-spacing: .08em; opacity: 0; pointer-events: none; }
+.warning strong { font-size: clamp(42px,7.5vw,100px); line-height: .9; } .warning span { font-size: clamp(18px,2.3vw,32px); font-weight: 700; letter-spacing: .04em; }
+body[data-state='hands_warning'] .warning { display: none; }
+@keyframes warning-flash { 0% { opacity: 0; transform: scale(.98); } 16%,70% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: scale(1.015); } }
+.score { position: fixed; top: 22px; right: 26px; z-index: 14; color: #8d1128; font-size: 20px; font-variant-numeric: tabular-nums; opacity: 0; }
+body[data-state='heart_game'] .score, body[data-state='overload'] .score, body[data-state='engulfed'] .score { opacity: .9; }
+.red-wash { z-index: 6; pointer-events: none; background: radial-gradient(circle at 50% 44%,transparent 22%,rgba(184,8,43,.5) 100%); opacity: var(--wash-danger); mix-blend-mode: multiply; }
+.vignette { z-index: 10; pointer-events: none; box-shadow: inset 0 0 var(--vignette-size) rgba(74,0,38,var(--vignette-danger)); }
+.global-grain { z-index: 11; pointer-events: none; opacity: var(--grain-danger); mix-blend-mode: soft-light; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.78' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.72'/%3E%3C/svg%3E"); }
+body[data-state='engulfed'] .score { opacity: 0; transition: opacity 500ms ease; }
+body[data-state='reveal'] .score, body[data-state='reveal'] .warning-hands { opacity: 0; }
+.scene-transition { z-index: 30; pointer-events: none; opacity: 0; background: radial-gradient(circle at 50% 56%, #7e0d25 0%, #28030c 68%, #120106 100%); }
+body[data-state='ocean_transition'] .scene-transition { animation: ocean-scene-transition 1100ms cubic-bezier(.65,0,.35,1) both; }
+@keyframes ocean-scene-transition {
+  0% { opacity: 0; }
+  42%, 62% { opacity: 1; }
+  100% { opacity: 0; }
+}
+body[data-state='ocean_transition'] :is(.warning-hands,.heart-layer,.heart-pile,.heart-field,.engulf-cover,.warning,.score),
+body[data-state='heart_ocean'] :is(.warning-hands,.heart-layer,.heart-pile,.heart-field,.engulf-cover,.warning,.score),
+body:is([data-state='digging'],[data-state='reveal']) :is(.warning-hands,.heart-layer,.heart-pile,.heart-field,.engulf-cover,.warning,.score) { opacity: 0; pointer-events: none; transition: opacity 420ms ease; }
+body[data-state='ocean_transition'] :is(.red-wash,.vignette),
+body[data-state='heart_ocean'] :is(.red-wash,.vignette),
+body:is([data-state='digging'],[data-state='reveal']) :is(.red-wash,.vignette) { opacity: 0; transition: opacity 600ms ease; }
+body:is([data-state='ocean_transition'],[data-state='heart_ocean'],[data-state='digging'],[data-state='reveal']) { background: #360713; }
+.heart-ocean-dom { visibility: hidden; opacity: 0; overflow: hidden; pointer-events: none; transition: opacity 500ms ease; }
+.heart-ocean-middle { z-index: 5; }
+.final-heart-art { z-index: 1; visibility: hidden; opacity: 0; overflow: hidden; pointer-events: none; transition: opacity 420ms ease; }
+.final-heart-art img { width: 100%; height: 100%; display: block; object-fit: cover; }
+.final-heart-art-back { z-index: 2; }
+.final-heart-art-front { z-index: 4; }
+body:is([data-state='ocean_transition'],[data-state='heart_ocean'],[data-state='digging'],[data-state='reveal']) .final-heart-art { visibility: visible; opacity: 1; }
+body[data-state='ocean_transition'] .heart-ocean-dom,
+body[data-state='heart_ocean'] .heart-ocean-dom,
+body:is([data-state='digging'],[data-state='reveal']) .heart-ocean-dom { visibility: visible; opacity: 1; }
+@media (max-width: 700px) { .score { top: 16px; right: 17px; } }
+
+.debug-time-panel { position: fixed; left: 14px; bottom: 14px; z-index: 2147483647; width: min(430px,calc(100vw - 28px)); padding: 10px; border: 1px solid rgba(255,255,255,.18); border-radius: 9px; color: #f6edf1; background: rgba(20,8,14,.9); box-shadow: 0 8px 28px rgba(0,0,0,.35); font: 11px/1.2 ui-monospace,SFMono-Regular,Menlo,monospace; backdrop-filter: blur(8px); pointer-events: none; }
+.debug-time-panel button, .debug-time-panel input { pointer-events: auto; }
+.debug-time-row { display: flex; align-items: center; gap: 6px; }
+.debug-time-panel button { min-height: 25px; padding: 3px 7px; border: 1px solid rgba(255,255,255,.2); border-radius: 5px; color: inherit; background: rgba(255,255,255,.08); font: inherit; cursor: pointer; }
+.debug-time-panel button:hover, .debug-time-panel button.is-active { border-color: #ff7895; background: rgba(255,80,120,.28); }
+.debug-time-readout { margin-left: auto; font-variant-numeric: tabular-nums; }
+.debug-timeline { width: 100%; height: 18px; margin: 6px 0; accent-color: #ef476f; }
+.debug-rates { margin-bottom: 7px; }
+.debug-jumps { display: flex; flex-wrap: wrap; gap: 5px; }
+.debug-jumps button { padding-inline: 6px; font-size: 10px; }
